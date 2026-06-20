@@ -1,11 +1,4 @@
-interface InputFieldProps {
-  label: string
-  value: string
-  onChange: (value: string) => void
-  placeholder?: string
-  type?: string
-  disabled?: boolean
-}
+import type { InputFieldProps } from './InputField.types'
 
 export function InputField({
   label,

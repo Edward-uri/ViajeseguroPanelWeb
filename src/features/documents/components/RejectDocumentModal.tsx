@@ -2,13 +2,7 @@ import { useState } from 'react'
 import type { ReviewDocument } from '../../../shared/domain'
 import { Modal } from '../../../shared/components/Modal'
 import { Button } from '../../../shared/components/Button'
-
-interface RejectDocumentModalProps {
-  document: ReviewDocument | null
-  isOpen: boolean
-  onClose: () => void
-  onConfirm: (doc: ReviewDocument, reason: string) => void
-}
+import type { RejectDocumentModalProps } from './RejectDocumentModal.types'
 
 export function RejectDocumentModal({ document, isOpen, onClose, onConfirm }: RejectDocumentModalProps) {
   return (

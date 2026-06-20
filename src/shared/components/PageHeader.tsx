@@ -1,10 +1,4 @@
-import type { ReactNode } from 'react'
-
-interface PageHeaderProps {
-  title: string
-  subtitle?: string
-  action?: ReactNode
-}
+import type { PageHeaderProps } from './PageHeader.types'
 
 export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
   return (

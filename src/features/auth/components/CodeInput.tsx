@@ -1,10 +1,5 @@
 import { useRef, useEffect } from 'react'
-
-interface CodeInputProps {
-  code: string[]
-  onChange: (index: number, value: string) => void
-  disabled?: boolean
-}
+import type { CodeInputProps } from './CodeInput.types'
 
 export function CodeInput({ code, onChange, disabled = false }: CodeInputProps) {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])

@@ -1,8 +1,4 @@
-interface StatCardProps {
-  value: number | string
-  label: string
-  accent?: 'primary' | 'success'
-}
+import type { StatCardProps } from './StatCard.types'
 
 export function StatCard({ value, label, accent = 'primary' }: StatCardProps) {
   const borderColor = accent === 'success' ? 'border-l-success' : 'border-l-primary'

@@ -13,18 +13,21 @@ export function useVehicleQueueViewModel() {
   const retry = useCallback(() => setTick((n) => n + 1), [])
 
   useEffect(() => {
-    let cancelled = false
-    setIsLoading(true)
-    setError(null)
+    let active = true
     getVehicleQueue()
       .then((res) => {
-        if (cancelled) return
+        if (!active) return
         setItems(res.items)
         setStats(res.stats)
+        setError(null)
+        setIsLoading(false)
       })
-      .catch((e) => { if (!cancelled) setError(friendlyMessage(e)) })
-      .finally(() => { if (!cancelled) setIsLoading(false) })
-    return () => { cancelled = true }
+      .catch((e) => {
+        if (!active) return
+        setError(friendlyMessage(e))
+        setIsLoading(false)
+      })
+    return () => { active = false }
   }, [tick])
 
   return { items, stats, isLoading, error, retry }

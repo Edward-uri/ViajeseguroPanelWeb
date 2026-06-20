@@ -1,9 +1,5 @@
 import logoUrl from '../../assets/logo-jala.svg'
-
-interface LogoProps {
-  size?: number
-  className?: string
-}
+import type { LogoProps } from './Logo.types'
 
 export function Logo({ size = 36, className }: LogoProps) {
   return (

@@ -1,10 +1,4 @@
-interface PrimaryButtonProps {
-  children: React.ReactNode
-  onClick?: () => void
-  disabled?: boolean
-  isLoading?: boolean
-  type?: 'button' | 'submit'
-}
+import type { PrimaryButtonProps } from './PrimaryButton.types'
 
 export function PrimaryButton({
   children,

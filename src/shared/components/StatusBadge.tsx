@@ -1,13 +1,6 @@
-import type { ReactNode } from 'react'
+import type { BadgeVariant, StatusBadgeProps } from './StatusBadge.types'
 
-export type BadgeVariant =
-  | 'en_revision' | 'pendiente' | 'aprobado' | 'rechazado'
-  | 'faltante' | 'opcional' | 'neutral'
-
-interface StatusBadgeProps {
-  variant: BadgeVariant
-  children: ReactNode
-}
+export type { BadgeVariant } from './StatusBadge.types'
 
 const styles: Record<BadgeVariant, string> = {
   en_revision: 'bg-warning-bg text-warning',

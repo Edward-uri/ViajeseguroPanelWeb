@@ -1,18 +1,4 @@
-import type { ReactNode } from 'react'
-
-type ButtonVariant = 'primary' | 'success' | 'danger' | 'outline' | 'dangerOutline' | 'ghost'
-type ButtonSize = 'sm' | 'md'
-
-interface ButtonProps {
-  children: ReactNode
-  onClick?: () => void
-  type?: 'button' | 'submit'
-  variant?: ButtonVariant
-  size?: ButtonSize
-  disabled?: boolean
-  isLoading?: boolean
-  fullWidth?: boolean
-}
+import type { ButtonVariant, ButtonSize, ButtonProps } from './Button.types'
 
 const base =
   'inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50'

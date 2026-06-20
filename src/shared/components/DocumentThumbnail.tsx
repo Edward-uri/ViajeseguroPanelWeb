@@ -1,7 +1,4 @@
-interface DocumentThumbnailProps {
-  uploaded: boolean
-  size?: 'card' | 'large'
-}
+import type { DocumentThumbnailProps } from './DocumentThumbnail.types'
 
 export function DocumentThumbnail({ uploaded, size = 'card' }: DocumentThumbnailProps) {
   const height = size === 'large' ? 'h-[320px]' : 'h-[120px]'

@@ -1,13 +1,6 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-
-interface ModalProps {
-  isOpen: boolean
-  onClose: () => void
-  children: ReactNode
-  labelledById?: string
-  size?: 'md' | 'lg'
-}
+import type { ModalProps } from './Modal.types'
 
 export function Modal({ isOpen, onClose, children, labelledById, size = 'md' }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null)
