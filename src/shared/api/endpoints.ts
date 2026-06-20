@@ -1,0 +1,20 @@
+export const endpoints = {
+  auth: {
+    loginStart: '/auth/login/start',
+    loginVerify: '/auth/login/verify',
+    refresh: '/auth/refresh',
+    logout: '/auth/logout',
+  },
+  users: { me: '/users/me' },
+  catalog: { municipios: '/municipios' },
+  admin: {
+    driverQueue: '/admin/conductores/pendientes',
+    driverDetail: (id: string | number) => `/admin/conductores/${id}`,
+    driverDocPatch: (id: number) => `/admin/documentos/${id}`,
+    driverDocFile: (id: number) => `/admin/documentos/${id}/archivo`,
+    vehicleQueue: '/admin/vehiculos/pendientes',
+    vehicleDetail: (id: string | number) => `/admin/vehiculos/${id}`,
+    vehicleDocPatch: (id: number) => `/admin/vehiculos/documentos/${id}`,
+    vehicleDocFile: (id: number) => `/admin/vehiculos/documentos/${id}/archivo`,
+  },
+} as const

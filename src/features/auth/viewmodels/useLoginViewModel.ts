@@ -1,32 +1,27 @@
-import { useState, useCallback } from 'react'
+import { useCallback, useState } from 'react'
+import { loginStart } from '../api/loginStart'
+import { notify } from '../../../shared/ui/toast'
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export function useLoginViewModel() {
-  const [emailOrPhone, setEmailOrPhone] = useState('')
+  const [correo, setCorreo] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const isValid = emailOrPhone.trim().length > 0
+  const isValid = EMAIL_RE.test(correo.trim())
 
   const sendCode = useCallback(async (): Promise<boolean> => {
     setIsLoading(true)
-    setError(null)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await loginStart(correo.trim())
+      notify.success(`Te enviamos un código a ${correo.trim()}`)
       return true
-    } catch {
-      setError('Error al enviar el codigo. Intenta de nuevo.')
+    } catch (e) {
+      notify.error(e)
       return false
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [correo])
 
-  return {
-    emailOrPhone,
-    setEmailOrPhone,
-    isLoading,
-    error,
-    isValid,
-    sendCode,
-  }
+  return { correo, setCorreo, isLoading, isValid, sendCode }
 }

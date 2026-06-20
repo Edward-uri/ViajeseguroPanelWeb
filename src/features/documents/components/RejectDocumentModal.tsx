@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { ReviewDocument } from '../../../shared/data/types'
+import type { ReviewDocument } from '../../../shared/domain'
 import { Modal } from '../../../shared/components/Modal'
 import { Button } from '../../../shared/components/Button'
 

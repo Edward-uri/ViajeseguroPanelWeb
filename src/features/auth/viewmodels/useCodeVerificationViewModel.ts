@@ -1,76 +1,72 @@
-import { useState, useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { loginVerify } from '../api/loginVerify'
+import { loginStart } from '../api/loginStart'
+import { useAuth } from '../useAuth'
+import { notify } from '../../../shared/ui/toast'
 
-export function useCodeVerificationViewModel() {
+export function useCodeVerificationViewModel(correo: string) {
+  const { login } = useAuth()
   const [code, setCode] = useState<string[]>(['', '', '', ''])
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const [canResend, setCanResend] = useState(false)
-  const [countdown, setCountdown] = useState(0)
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const [countdown, setCountdown] = useState(30)
+  const timerRef = useRef<number | null>(null)
 
-  const isComplete = code.every((digit) => digit !== '')
+  const isComplete = code.every((d) => d !== '')
 
-  const updateDigit = useCallback((index: number, value: string) => {
-    if (value.length > 1) return
-    if (value && !/^\d$/.test(value)) return
-    setCode((prev) => {
-      const next = [...prev]
-      next[index] = value
-      return next
-    })
-  }, [])
+  const updateDigit = (index: number, value: string) => {
+    const v = value.replace(/\D/g, '').slice(0, 1)
+    setCode((prev) => prev.map((d, i) => (i === index ? v : d)))
+  }
 
-  const verifyCode = useCallback(async (): Promise<boolean> => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      return true
-    } catch {
-      setError('Codigo incorrecto. Intenta de nuevo.')
-      return false
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
-
-  const startResendCooldown = useCallback(() => {
-    setCanResend(false)
-    setCountdown(30)
-    if (timerRef.current) clearInterval(timerRef.current)
-    timerRef.current = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          if (timerRef.current) clearInterval(timerRef.current)
+  const startTimer = useCallback(() => {
+    if (timerRef.current) window.clearInterval(timerRef.current)
+    timerRef.current = window.setInterval(() => {
+      setCountdown((c) => {
+        if (c <= 1) {
+          if (timerRef.current) window.clearInterval(timerRef.current)
           setCanResend(true)
           return 0
         }
-        return prev - 1
+        return c - 1
       })
     }, 1000)
   }, [])
 
-  const resendCode = useCallback(async (): Promise<boolean> => {
-    if (!canResend) return false
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      startResendCooldown()
-      return true
-    } catch {
-      return false
-    }
-  }, [canResend, startResendCooldown])
+  useEffect(() => {
+    startTimer()
+    return () => { if (timerRef.current) window.clearInterval(timerRef.current) }
+  }, [startTimer])
 
-  return {
-    code,
-    updateDigit,
-    isLoading,
-    error,
-    isComplete,
-    canResend,
-    countdown,
-    verifyCode,
-    resendCode,
-    startResendCooldown,
-  }
+  const verifyCode = useCallback(async (): Promise<boolean> => {
+    setIsLoading(true)
+    try {
+      const session = await loginVerify(correo, code.join(''))
+      if (session.user.rol !== 'admin') {
+        notify.error('Esta cuenta no tiene acceso al panel.')
+        return false
+      }
+      login(session)
+      return true
+    } catch (e) {
+      notify.error(e)
+      return false
+    } finally {
+      setIsLoading(false)
+    }
+  }, [correo, code, login])
+
+  const resendCode = useCallback(async () => {
+    try {
+      await loginStart(correo)
+      notify.info('Código reenviado.')
+      setCanResend(false)
+      setCountdown(30)
+      startTimer()
+    } catch (e) {
+      notify.error(e)
+    }
+  }, [correo, startTimer])
+
+  return { code, updateDigit, isLoading, isComplete, canResend, countdown, verifyCode, resendCode }
 }

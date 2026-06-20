@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+# Local environment (keep .env.example tracked)
+.env
+
+# Claude Code scratch (worktrees + personal settings)
+.claude/worktrees/
+.claude/settings.local.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
