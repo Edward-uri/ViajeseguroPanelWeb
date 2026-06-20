@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { getVehicleDetail } from '../api/getVehicleDetail'
 import { approveVehicleDocument } from '../../documents/api/approveVehicleDocument'
 import { rejectVehicleDocument } from '../../documents/api/rejectVehicleDocument'
@@ -18,8 +18,24 @@ export function useVehicleDetailViewModel(id: string | undefined) {
   const [rejectDoc, setRejectDoc] = useState<ReviewDocument | null>(null)
   const [fileUrl, setFileUrl] = useState<string | null>(null)
   const [fileLoading, setFileLoading] = useState(false)
+  const fileUrlRef = useRef<string | null>(null)
+  const mountedRef = useRef(true)
 
   const retry = useCallback(() => setTick((n) => n + 1), [])
+
+  const setFile = useCallback((url: string | null) => {
+    if (fileUrlRef.current && fileUrlRef.current !== url) URL.revokeObjectURL(fileUrlRef.current)
+    fileUrlRef.current = url
+    setFileUrl(url)
+  }, [])
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+      if (fileUrlRef.current) { URL.revokeObjectURL(fileUrlRef.current); fileUrlRef.current = null }
+    }
+  }, [])
 
   useEffect(() => {
     if (!id) return
@@ -30,53 +46,38 @@ export function useVehicleDetailViewModel(id: string | undefined) {
         setDetail(d)
         setError(null)
         setIsLoading(false)
-        void getMunicipioName(d.idMunicipio).then((name) => { if (active) setMunicipio(name) })
+        void getMunicipioName(d.idMunicipio).then((m) => { if (active) setMunicipio(m) })
       })
-      .catch((e) => {
-        if (!active) return
-        setError(friendlyMessage(e))
-        setIsLoading(false)
-      })
+      .catch((e) => { if (!active) return; setError(friendlyMessage(e)); setIsLoading(false) })
     return () => { active = false }
   }, [id, tick])
 
   const openViewer = (doc: ReviewDocument) => {
     setViewerDoc(doc)
-    setFileUrl(null)
+    setFile(null)
     if (doc.idDocumento == null) return
     setFileLoading(true)
     getVehicleDocumentFile(doc.idDocumento)
-      .then(setFileUrl)
+      .then((url) => { if (!mountedRef.current) { URL.revokeObjectURL(url); return } setFile(url) })
       .catch(() => notify.error('No se pudo cargar el documento.'))
-      .finally(() => setFileLoading(false))
+      .finally(() => { if (mountedRef.current) setFileLoading(false) })
   }
 
   const closeViewer = useCallback(() => {
-    setFileUrl((url) => { if (url) URL.revokeObjectURL(url); return null })
+    setFile(null)
     setViewerDoc(null)
-  }, [])
+  }, [setFile])
 
   const openReject = (doc: ReviewDocument) => { closeViewer(); setRejectDoc(doc) }
   const closeReject = () => setRejectDoc(null)
 
   const approve = async (doc: ReviewDocument) => {
     if (doc.idDocumento == null) return
-    try {
-      await approveVehicleDocument(doc.idDocumento)
-      notify.success('Documento aprobado.')
-      closeViewer()
-      setTick((n) => n + 1)
-    } catch (e) { notify.error(e) }
+    try { await approveVehicleDocument(doc.idDocumento); notify.success('Documento aprobado.'); closeViewer(); setTick((n) => n + 1) } catch (e) { notify.error(e) }
   }
-
   const confirmReject = async (doc: ReviewDocument, motivo: string) => {
     if (doc.idDocumento == null) return
-    try {
-      await rejectVehicleDocument(doc.idDocumento, motivo)
-      notify.success('Documento rechazado.')
-      setRejectDoc(null)
-      setTick((n) => n + 1)
-    } catch (e) { notify.error(e) }
+    try { await rejectVehicleDocument(doc.idDocumento, motivo); notify.success('Documento rechazado.'); setRejectDoc(null); setTick((n) => n + 1) } catch (e) { notify.error(e) }
   }
 
   return { detail, municipio, isLoading, error, retry, viewerDoc, rejectDoc, fileUrl, fileLoading, openViewer, closeViewer, openReject, closeReject, approve, confirmReject }

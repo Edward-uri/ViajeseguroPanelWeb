@@ -8,7 +8,13 @@
       "Bash(git -C \"c:\\\\Users\\\\eduar\\\\Desktop\\\\Universidad\\\\9VO CUATRI\\\\Integrador\\\\ViajeSeguroPanel\" status --short src/shared/)",
       "PowerShell(Set-Location \"C:\\\\Users\\\\eduar\\\\Desktop\\\\Universidad\\\\9VO CUATRI\\\\Integrador\\\\ViajeSeguroPanel\"; npx tsc -b --noEmit 2>&1; Write-Host \"TSC_EXIT:$LASTEXITCODE\")",
       "PowerShell(Set-Location \"C:\\\\Users\\\\eduar\\\\Desktop\\\\Universidad\\\\9VO CUATRI\\\\Integrador\\\\ViajeSeguroPanel\"; npm run lint 2>&1; Write-Host \"LINT_EXIT:$LASTEXITCODE\")",
-      "PowerShell(Set-Location \"C:\\\\Users\\\\eduar\\\\Desktop\\\\Universidad\\\\9VO CUATRI\\\\Integrador\\\\ViajeSeguroPanel\"; npx eslint src/ 2>&1; Write-Host \"LINT_EXIT:$LASTEXITCODE\")"
+      "PowerShell(Set-Location \"C:\\\\Users\\\\eduar\\\\Desktop\\\\Universidad\\\\9VO CUATRI\\\\Integrador\\\\ViajeSeguroPanel\"; npx eslint src/ 2>&1; Write-Host \"LINT_EXIT:$LASTEXITCODE\")",
+      "Bash(ls public/)",
+      "Bash(ls src/assets/)",
+      "Bash(ls node_modules/sileo/)",
+      "Bash(ls node_modules/sileo/dist/)",
+      "Bash(node -e \"const s=require\\('fs'\\).readFileSync\\('node_modules/sileo/dist/index.mjs','utf8'\\); let i=s.indexOf\\('THEME_FILLS'\\); console.log\\(s.slice\\(i-200,i+200\\)\\);\")",
+      "Bash(node -e ' *)"
     ]
   }
 }

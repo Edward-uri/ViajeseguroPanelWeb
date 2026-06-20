@@ -48,9 +48,8 @@ function buildInit(opts: RequestOptions): RequestInit {
 async function send(path: string, opts: RequestOptions): Promise<Response> {
   let res = await fetch(`${apiConfig.baseUrl}${path}`, buildInit(opts))
   if (res.status === 401 && opts.auth !== false && authStore.getRefreshToken()) {
-    refreshing = refreshing ?? doRefresh()
+    if (!refreshing) refreshing = doRefresh().finally(() => { refreshing = null })
     const ok = await refreshing
-    refreshing = null
     if (ok) res = await fetch(`${apiConfig.baseUrl}${path}`, buildInit(opts))
     else authStore.clear()
   }
