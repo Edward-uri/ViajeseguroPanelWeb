@@ -16,6 +16,7 @@ const MESSAGES: Record<string, string> = {
   UNAUTHORIZED: 'Tu sesión expiró. Inicia de nuevo.',
   FORBIDDEN: 'Esta cuenta no tiene acceso al panel.',
   NOT_FOUND: 'No se encontró el recurso solicitado.',
+  CREDENCIALES: 'Correo o contraseña incorrectos.',
   OTP_INVALID: 'El código es incorrecto.',
   OTP_EXPIRED: 'El código expiró. Solicita uno nuevo.',
   RATE_LIMITED: 'Demasiados intentos. Espera un momento.',

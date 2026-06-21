@@ -16,7 +16,9 @@ export function CodeVerificationView() {
 
   const handleVerify = async () => {
     if (!isComplete) return
-    if (await verifyCode()) navigate(paths.revision)
+    const dest = await verifyCode()
+    if (dest === 'revision') navigate(paths.revision)
+    else if (dest === 'password') navigate(paths.crearPassword)
   }
 
   return (

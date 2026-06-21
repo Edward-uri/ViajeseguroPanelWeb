@@ -2,6 +2,8 @@ export const endpoints = {
   auth: {
     loginStart: '/auth/login/start',
     loginVerify: '/auth/login/verify',
+    loginPassword: '/auth/login/password',
+    setPassword: '/auth/password',
     refresh: '/auth/refresh',
     logout: '/auth/logout',
   },

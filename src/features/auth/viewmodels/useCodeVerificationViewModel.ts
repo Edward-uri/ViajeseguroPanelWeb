@@ -38,19 +38,20 @@ export function useCodeVerificationViewModel(correo: string) {
     return () => { if (timerRef.current) window.clearInterval(timerRef.current) }
   }, [startTimer])
 
-  const verifyCode = useCallback(async (): Promise<boolean> => {
+  // 'revision' = entrar al panel; 'password' = ofrecer crear contraseña; null = falló.
+  const verifyCode = useCallback(async (): Promise<'revision' | 'password' | null> => {
     setIsLoading(true)
     try {
       const session = await loginVerify(correo, code.join(''))
       if (session.user.rol !== 'admin') {
         notify.error('Esta cuenta no tiene acceso al panel.')
-        return false
+        return null
       }
       login(session)
-      return true
+      return session.user.tienePassword ? 'revision' : 'password'
     } catch (e) {
       notify.error(e)
-      return false
+      return null
     } finally {
       setIsLoading(false)
     }

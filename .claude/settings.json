@@ -14,7 +14,14 @@
       "Bash(ls node_modules/sileo/)",
       "Bash(ls node_modules/sileo/dist/)",
       "Bash(node -e \"const s=require\\('fs'\\).readFileSync\\('node_modules/sileo/dist/index.mjs','utf8'\\); let i=s.indexOf\\('THEME_FILLS'\\); console.log\\(s.slice\\(i-200,i+200\\)\\);\")",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(cd \"C:/Users/eduar/.claude/plugins/cache/claude-plugins-official/superpowers\" && find . -maxdepth 3 -name \"SKILL.md\" 2>/dev/null | grep -i -E \"design|front|css|ui|brainstorm\" )",
+      "Read(//c/Users/eduar/.claude/plugins/cache/claude-plugins-official/superpowers/**)",
+      "PowerShell(npm view lucide-react version license dependencies maintainers dist.unpackedSize 2>&1; Write-Output \"=== weekly downloads ===\"; \\(Invoke-RestMethod \"https://api.npmjs.org/downloads/point/last-week/lucide-react\"\\).downloads)",
+      "PowerShell(npm install lucide-react 2>&1)",
+      "Bash(ls \"C:/Users/eduar/.claude/projects/c--Users-eduar-Desktop-Universidad-9VO-CUATRI-Integrador-ViajeSeguroPanel/memory/\")",
+      "Bash(cat \"C:/Users/eduar/.claude/projects/c--Users-eduar-Desktop-Universidad-9VO-CUATRI-Integrador-ViajeSeguroPanel/memory/MEMORY.md\")",
+      "Read(//c/Users/eduar/AppData/Local/Temp/**)"
     ]
   }
 }

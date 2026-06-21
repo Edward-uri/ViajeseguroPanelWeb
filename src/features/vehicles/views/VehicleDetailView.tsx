@@ -1,25 +1,41 @@
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { useVehicleDetailViewModel } from '../viewmodels/useVehicleDetailViewModel'
 import { StatusBadge } from '../../../shared/components/StatusBadge'
-import { Button } from '../../../shared/components/Button'
-import { VehicleIcon } from '../../../shared/icons/VehicleIcon'
+import { EmptyState } from '../../../shared/components/EmptyState'
+import { BackIcon, VehicleIcon, DocumentIcon, WarningIcon, RefreshIcon, SpinnerIcon } from '../../../shared/icons'
 import { DocumentCard, DocumentViewerModal, RejectDocumentModal } from '../../documents'
 import { paths } from '../../../routes/paths'
+
+const jakarta = { fontFamily: 'var(--font-family-jakarta)' }
 
 export function VehicleDetailView() {
   const navigate = useNavigate()
   const { vehicleId } = useParams()
   const state = (useLocation().state as { propietario?: string; telefono?: string } | null) ?? {}
   const vm = useVehicleDetailViewModel(vehicleId)
+  const goBack = () => navigate(paths.vehiculos)
 
-  if (vm.isLoading) return <div className="p-8 text-ink-soft" style={{ fontFamily: 'var(--font-family-jakarta)' }}>Cargando…</div>
+  if (vm.isLoading) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center gap-3 p-8 text-ink-soft" style={jakarta}>
+        <SpinnerIcon size={28} className="animate-spin text-primary" />
+        <span className="text-sm">Cargando vehículo…</span>
+      </div>
+    )
+  }
   if (vm.error || !vm.detail) {
     return (
       <div className="p-8">
-        <button onClick={() => navigate(paths.vehiculos)} className="mb-6 text-sm text-ink-soft" style={{ fontFamily: 'var(--font-family-jakarta)' }}>‹ Volver a vehículos</button>
-        <div className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-white py-12">
-          <p className="text-sm text-ink-soft" style={{ fontFamily: 'var(--font-family-jakarta)' }}>{vm.error ?? 'No se encontró el vehículo.'}</p>
-          <Button variant="outline" size="sm" onClick={vm.retry}>Reintentar</Button>
+        <BackLink onClick={goBack} label="Volver a vehículos" />
+        <div className="mt-6">
+          <EmptyState
+            icon={WarningIcon}
+            tone="danger"
+            title="No se pudo cargar"
+            description={vm.error ?? 'No se encontró el vehículo.'}
+            action={{ label: 'Reintentar', icon: RefreshIcon, onClick: vm.retry }}
+            secondaryAction={{ label: 'Volver a vehículos', icon: BackIcon, onClick: goBack }}
+          />
         </div>
       </div>
     )
@@ -27,17 +43,17 @@ export function VehicleDetailView() {
   const v = vm.detail
   return (
     <div className="p-8">
-      <button onClick={() => navigate(paths.vehiculos)} className="mb-6 flex items-center gap-2 text-sm text-ink-soft" style={{ fontFamily: 'var(--font-family-jakarta)' }}>‹ Volver a vehículos</button>
-      <div className="mb-6 flex items-center gap-4">
-        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-warning-bg text-primary">
-          <VehicleIcon />
+      <BackLink onClick={goBack} label="Volver a vehículos" />
+      <div className="mb-6 mt-6 flex items-center gap-4">
+        <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-warning-bg text-primary">
+          <VehicleIcon size={26} />
         </span>
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-ink" style={{ fontFamily: 'var(--font-family-jakarta)' }}>{v.placa}</h1>
+            <h1 className="text-2xl font-bold text-ink" style={jakarta}>{v.placa}</h1>
             <StatusBadge variant="en_revision">En revisión</StatusBadge>
           </div>
-          <div className="text-sm text-ink-soft" style={{ fontFamily: 'var(--font-family-jakarta)' }}>{state.propietario ?? `Vehículo #${v.idVehiculo}`}{state.telefono ? ` · ${state.telefono}` : ''}</div>
+          <div className="text-sm text-ink-soft" style={jakarta}>{state.propietario ?? `Vehículo #${v.idVehiculo}`}{state.telefono ? ` · ${state.telefono}` : ''}</div>
         </div>
       </div>
 
@@ -48,7 +64,10 @@ export function VehicleDetailView() {
         <Info label="Municipio" value={vm.municipio || '—'} />
       </div>
 
-      <h2 className="mb-4 text-lg font-bold text-ink" style={{ fontFamily: 'var(--font-family-jakarta)' }}>Documentos ({v.documentos.length})</h2>
+      <div className="mb-4 flex items-center gap-2">
+        <DocumentIcon size={18} className="text-ink-soft" />
+        <h2 className="text-lg font-bold text-ink" style={jakarta}>Documentos ({v.documentos.length})</h2>
+      </div>
       <div className="grid grid-cols-3 gap-6">
         {v.documentos.map((doc) => <DocumentCard key={doc.tipo} document={doc} onReview={vm.openViewer} />)}
       </div>
@@ -59,11 +78,20 @@ export function VehicleDetailView() {
   )
 }
 
+function BackLink({ onClick, label }: { onClick: () => void; label: string }) {
+  return (
+    <button onClick={onClick} className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-soft transition-colors hover:text-ink" style={jakarta}>
+      <BackIcon size={18} />
+      {label}
+    </button>
+  )
+}
+
 function Info({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <div className="text-xs text-placeholder" style={{ fontFamily: 'var(--font-family-jakarta)' }}>{label}</div>
-      <div className="text-base font-semibold text-ink" style={{ fontFamily: 'var(--font-family-jakarta)' }}>{value}</div>
+      <div className="text-xs text-placeholder" style={jakarta}>{label}</div>
+      <div className="text-base font-semibold text-ink" style={jakarta}>{value}</div>
     </div>
   )
 }

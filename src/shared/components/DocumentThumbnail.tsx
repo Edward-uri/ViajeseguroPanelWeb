@@ -1,3 +1,4 @@
+import { UploadIcon } from '../icons'
 import type { DocumentThumbnailProps } from './DocumentThumbnail.types'
 
 export function DocumentThumbnail({ uploaded, size = 'card' }: DocumentThumbnailProps) {
@@ -6,10 +7,7 @@ export function DocumentThumbnail({ uploaded, size = 'card' }: DocumentThumbnail
   if (!uploaded) {
     return (
       <div className={`flex ${height} flex-col items-center justify-center gap-2 rounded-xl bg-neutral-bg`}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-placeholder">
-          <path d="M12 16V4M12 4L7 9M12 4l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M4 17v2a1 1 0 001 1h14a1 1 0 001-1v-2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
+        <UploadIcon size={24} strokeWidth={1.75} className="text-placeholder" />
         <span className="text-xs text-placeholder" style={{ fontFamily: 'var(--font-family-jakarta)' }}>
           No subido
         </span>

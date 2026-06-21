@@ -8,6 +8,7 @@ export interface AuthUser {
   rol: Rol
   estadoCuenta: EstadoCuenta
   telefonoVerificado: boolean
+  tienePassword: boolean
   idMunicipio: number | null
   fotoPerfilUrl: string | null
   fechaRegistro: string | null

@@ -1,29 +1,55 @@
-import { Button } from './Button'
+import { EmptyState } from './EmptyState'
+import { RefreshIcon, WarningIcon } from '../icons'
 import type { QueueStateProps } from './QueueState.types'
 
-export function QueueState({ isLoading, error, isEmpty, emptyText, onRetry }: QueueStateProps) {
+export function QueueState({
+  isLoading,
+  error,
+  isEmpty,
+  onRetry,
+  emptyIcon,
+  emptyTitle,
+  emptyDescription,
+  emptyTone = 'neutral',
+  emptyAction,
+}: QueueStateProps) {
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-3">
-        {[0, 1, 2].map((i) => (
-          <div key={i} className="h-16 animate-pulse rounded-xl bg-neutral-bg" />
+      <div className="overflow-hidden rounded-2xl border border-border bg-white">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="flex items-center gap-4 border-t border-border px-6 py-4 first:border-t-0">
+            <div className="h-10 w-10 shrink-0 animate-pulse rounded-full bg-neutral-bg" />
+            <div className="flex flex-1 flex-col gap-2">
+              <div className="h-3 w-40 animate-pulse rounded bg-neutral-bg" />
+              <div className="h-2.5 w-24 animate-pulse rounded bg-neutral-bg" />
+            </div>
+            <div className="h-8 w-24 animate-pulse rounded-lg bg-neutral-bg" />
+          </div>
         ))}
       </div>
     )
   }
   if (error) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-white py-12">
-        <p className="text-sm text-ink-soft" style={{ fontFamily: 'var(--font-family-jakarta)' }}>{error}</p>
-        <Button variant="outline" size="sm" onClick={onRetry}>Reintentar</Button>
-      </div>
+      <EmptyState
+        icon={WarningIcon}
+        tone="danger"
+        title="No se pudo cargar"
+        description={error}
+        action={{ label: 'Reintentar', icon: RefreshIcon, onClick: onRetry }}
+      />
     )
   }
   if (isEmpty) {
     return (
-      <div className="rounded-2xl border border-border bg-white py-12 text-center text-sm text-ink-soft" style={{ fontFamily: 'var(--font-family-jakarta)' }}>
-        {emptyText}
-      </div>
+      <EmptyState
+        icon={emptyIcon}
+        tone={emptyTone}
+        title={emptyTitle}
+        description={emptyDescription}
+        action={{ label: 'Actualizar', icon: RefreshIcon, onClick: onRetry }}
+        secondaryAction={emptyAction}
+      />
     )
   }
   return null

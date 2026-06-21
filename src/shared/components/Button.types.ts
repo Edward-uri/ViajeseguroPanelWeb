@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import type { LucideIcon } from '../icons'
 
 export type ButtonVariant = 'primary' | 'success' | 'danger' | 'outline' | 'dangerOutline' | 'ghost'
 export type ButtonSize = 'sm' | 'md'
@@ -12,4 +13,6 @@ export interface ButtonProps {
   disabled?: boolean
   isLoading?: boolean
   fullWidth?: boolean
+  /** Icono opcional a la izquierda del texto. */
+  icon?: LucideIcon
 }

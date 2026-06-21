@@ -1,7 +1,10 @@
+import { SpinnerIcon } from '../icons'
 import type { ButtonVariant, ButtonSize, ButtonProps } from './Button.types'
 
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50'
+  'inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold transition-all duration-150 ' +
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98] ' +
+  'disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:active:scale-100'
 
 const sizes: Record<ButtonSize, string> = {
   sm: 'px-4 py-2 text-sm',
@@ -9,12 +12,12 @@ const sizes: Record<ButtonSize, string> = {
 }
 
 const variants: Record<ButtonVariant, string> = {
-  primary: 'bg-primary text-on-primary hover:brightness-105',
-  success: 'bg-success text-white hover:brightness-105',
-  danger: 'bg-red text-white hover:brightness-105',
-  outline: 'border border-primary bg-white text-primary hover:bg-sidebar-active',
-  dangerOutline: 'border border-red bg-white text-red hover:bg-danger-bg',
-  ghost: 'bg-transparent text-ink hover:bg-surface',
+  primary: 'bg-primary text-on-primary shadow-sm shadow-primary/30 hover:bg-primary-light hover:shadow-md focus-visible:ring-primary/40',
+  success: 'bg-success text-white shadow-sm hover:brightness-110 focus-visible:ring-success/40',
+  danger: 'bg-red text-white shadow-sm hover:brightness-110 focus-visible:ring-red/40',
+  outline: 'border border-primary/30 bg-white text-primary hover:border-primary hover:bg-sidebar-active focus-visible:ring-primary/30',
+  dangerOutline: 'border border-red/30 bg-white text-red hover:border-red hover:bg-danger-bg focus-visible:ring-red/30',
+  ghost: 'bg-transparent text-ink hover:bg-surface focus-visible:ring-border',
 }
 
 export function Button({
@@ -26,7 +29,9 @@ export function Button({
   disabled = false,
   isLoading = false,
   fullWidth = false,
+  icon: Icon,
 }: ButtonProps) {
+  const iconSize = size === 'sm' ? 16 : 18
   return (
     <button
       type={type}
@@ -36,15 +41,15 @@ export function Button({
       style={{ fontFamily: 'var(--font-family-jakarta)' }}
     >
       {isLoading ? (
-        <span className="flex items-center gap-2">
-          <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-          </svg>
-          Cargando...
-        </span>
+        <>
+          <SpinnerIcon size={iconSize} className="animate-spin" />
+          Cargando…
+        </>
       ) : (
-        children
+        <>
+          {Icon && <Icon size={iconSize} strokeWidth={2.25} />}
+          {children}
+        </>
       )}
     </button>
   )
