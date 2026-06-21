@@ -35,6 +35,13 @@ export {
   EyeOff as EyeOffIcon,
   Lock as LockIcon,
   KeyRound as PasswordIcon,
+  CircleHelp as QuestionIcon,
+  MapPin as ZonesIcon,
+  Plus as PlusIcon,
+  SquarePen as EditIcon,
+  Power as PowerIcon,
+  Coins as PriceIcon,
+  ChevronDown as DropdownIcon,
 } from 'lucide-react'
 
 export type { LucideIcon } from 'lucide-react'

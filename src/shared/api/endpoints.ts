@@ -18,5 +18,7 @@ export const endpoints = {
     vehicleDetail: (id: string | number) => `/admin/vehiculos/${id}`,
     vehicleDocPatch: (id: number) => `/admin/vehiculos/documentos/${id}`,
     vehicleDocFile: (id: number) => `/admin/vehiculos/documentos/${id}/archivo`,
+    zones: (idMunicipio: number) => `/admin/municipios/${idMunicipio}/zonas`,
+    zone: (idMunicipio: number, idZona: number) => `/admin/municipios/${idMunicipio}/zonas/${idZona}`,
   },
 } as const

@@ -3,10 +3,26 @@ import { Logo } from '../components/Logo'
 import { LogoutIcon } from '../icons'
 import { navItems } from '../../routes/navigation'
 import { useAuth } from '../../features/auth/useAuth'
+import { useConfirm } from '../ui/confirm'
+import { notify } from '../ui/toast'
 
 export function Sidebar() {
   const { user, logout } = useAuth()
+  const confirm = useConfirm()
   const initial = (user?.correoElectronico ?? 'A').charAt(0).toUpperCase()
+
+  const handleLogout = async () => {
+    const ok = await confirm({
+      title: 'Cerrar sesión',
+      message: '¿Seguro que quieres salir del panel?',
+      confirmLabel: 'Cerrar sesión',
+      tone: 'danger',
+      icon: LogoutIcon,
+    })
+    if (!ok) return
+    await logout()
+    notify.success('Sesión cerrada.')
+  }
 
   return (
     <aside className="flex h-screen w-[260px] shrink-0 flex-col bg-white">
@@ -45,7 +61,7 @@ export function Sidebar() {
           <span className="truncate text-xs text-ink-soft" style={{ fontFamily: 'var(--font-family-jakarta)' }}>{user?.correoElectronico ?? ''}</span>
         </div>
         <button
-          onClick={() => { void logout() }}
+          onClick={() => { void handleLogout() }}
           aria-label="Cerrar sesión"
           title="Cerrar sesión"
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-danger-bg hover:text-red"

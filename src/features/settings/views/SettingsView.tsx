@@ -4,6 +4,8 @@ import { Button } from '../../../shared/components/Button'
 import { MailIcon, RoleIcon, LogoutIcon } from '../../../shared/icons'
 import type { LucideIcon } from '../../../shared/icons'
 import { useAuth } from '../../auth/useAuth'
+import { useConfirm } from '../../../shared/ui/confirm'
+import { notify } from '../../../shared/ui/toast'
 import { paths } from '../../../routes/paths'
 
 const jakarta = { fontFamily: 'var(--font-family-jakarta)' }
@@ -11,7 +13,20 @@ const jakarta = { fontFamily: 'var(--font-family-jakarta)' }
 export function SettingsView() {
   const navigate = useNavigate()
   const { user, logout } = useAuth()
-  const handleLogout = async () => { await logout(); navigate(paths.login) }
+  const confirm = useConfirm()
+  const handleLogout = async () => {
+    const ok = await confirm({
+      title: 'Cerrar sesión',
+      message: '¿Seguro que quieres salir del panel?',
+      confirmLabel: 'Cerrar sesión',
+      tone: 'danger',
+      icon: LogoutIcon,
+    })
+    if (!ok) return
+    await logout()
+    notify.success('Sesión cerrada.')
+    navigate(paths.login)
+  }
   const initial = (user?.correoElectronico ?? 'A').charAt(0).toUpperCase()
   return (
     <div className="p-8">

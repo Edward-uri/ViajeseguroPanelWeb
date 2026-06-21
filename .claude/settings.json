@@ -21,7 +21,8 @@
       "PowerShell(npm install lucide-react 2>&1)",
       "Bash(ls \"C:/Users/eduar/.claude/projects/c--Users-eduar-Desktop-Universidad-9VO-CUATRI-Integrador-ViajeSeguroPanel/memory/\")",
       "Bash(cat \"C:/Users/eduar/.claude/projects/c--Users-eduar-Desktop-Universidad-9VO-CUATRI-Integrador-ViajeSeguroPanel/memory/MEMORY.md\")",
-      "Read(//c/Users/eduar/AppData/Local/Temp/**)"
+      "Read(//c/Users/eduar/AppData/Local/Temp/**)",
+      "Bash(node -e *)"
     ]
   }
 }

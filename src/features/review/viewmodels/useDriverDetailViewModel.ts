@@ -4,10 +4,13 @@ import { approveDriverDocument } from '../../documents/api/approveDriverDocument
 import { rejectDriverDocument } from '../../documents/api/rejectDriverDocument'
 import { getDriverDocumentFile } from '../../documents/api/getDriverDocumentFile'
 import { notify } from '../../../shared/ui/toast'
+import { useConfirm } from '../../../shared/ui/confirm'
+import { ApprovedIcon } from '../../../shared/icons'
 import { friendlyMessage } from '../../../shared/api/errors'
 import type { DriverDetail, ReviewDocument } from '../../../shared/domain'
 
 export function useDriverDetailViewModel(id: string | undefined) {
+  const confirm = useConfirm()
   const [detail, setDetail] = useState<DriverDetail | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -67,6 +70,13 @@ export function useDriverDetailViewModel(id: string | undefined) {
 
   const approve = async (doc: ReviewDocument) => {
     if (doc.idDocumento == null) return
+    const ok = await confirm({
+      title: 'Aprobar documento',
+      message: `¿Confirmas que "${doc.label}" es correcto? El conductor será notificado.`,
+      confirmLabel: 'Aprobar',
+      icon: ApprovedIcon,
+    })
+    if (!ok) return
     try { await approveDriverDocument(doc.idDocumento); notify.success('Documento aprobado.'); closeViewer(); setTick((n) => n + 1) } catch (e) { notify.error(e) }
   }
   const confirmReject = async (doc: ReviewDocument, motivo: string) => {

@@ -5,10 +5,13 @@ import { rejectVehicleDocument } from '../../documents/api/rejectVehicleDocument
 import { getVehicleDocumentFile } from '../../documents/api/getVehicleDocumentFile'
 import { getMunicipioName } from '../../../shared/api/catalog/getMunicipios'
 import { notify } from '../../../shared/ui/toast'
+import { useConfirm } from '../../../shared/ui/confirm'
+import { ApprovedIcon } from '../../../shared/icons'
 import { friendlyMessage } from '../../../shared/api/errors'
 import type { VehicleDetail, ReviewDocument } from '../../../shared/domain'
 
 export function useVehicleDetailViewModel(id: string | undefined) {
+  const confirm = useConfirm()
   const [detail, setDetail] = useState<VehicleDetail | null>(null)
   const [municipio, setMunicipio] = useState('')
   const [isLoading, setIsLoading] = useState(true)
@@ -73,6 +76,13 @@ export function useVehicleDetailViewModel(id: string | undefined) {
 
   const approve = async (doc: ReviewDocument) => {
     if (doc.idDocumento == null) return
+    const ok = await confirm({
+      title: 'Aprobar documento',
+      message: `¿Confirmas que "${doc.label}" es correcto? El propietario será notificado.`,
+      confirmLabel: 'Aprobar',
+      icon: ApprovedIcon,
+    })
+    if (!ok) return
     try { await approveVehicleDocument(doc.idDocumento); notify.success('Documento aprobado.'); closeViewer(); setTick((n) => n + 1) } catch (e) { notify.error(e) }
   }
   const confirmReject = async (doc: ReviewDocument, motivo: string) => {
