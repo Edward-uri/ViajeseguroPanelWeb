@@ -22,7 +22,7 @@ export function DocumentViewerModal({ document, isOpen, fileUrl, fileLoading, on
         </button>
       </div>
 
-      <div className="mt-4 grid grid-cols-[1fr_300px] gap-6">
+      <div className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-[1fr_300px]">
         {fileLoading ? (
           <div className="flex h-[320px] flex-col items-center justify-center gap-2 rounded-xl bg-neutral-bg text-ink-soft" style={{ fontFamily: 'var(--font-family-jakarta)' }}>
             <SpinnerIcon size={24} className="animate-spin text-primary" />

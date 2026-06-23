@@ -33,7 +33,7 @@ export function Modal({ isOpen, onClose, children, labelledById, size = 'md', el
         aria-modal="true"
         aria-labelledby={labelledById}
         tabIndex={-1}
-        className={`w-full ${maxW} rounded-2xl bg-white p-6 shadow-2xl outline-none`}
+        className={`max-h-[90vh] w-full ${maxW} overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl outline-none`}
       >
         {children}
       </div>

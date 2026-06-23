@@ -8,5 +8,6 @@ export const paths = {
   vehicleDetail: (id: string | number) => `/vehiculos/${id}`,
   conductores: '/conductores',
   zonas: '/zonas',
+  administradores: '/administradores',
   ajustes: '/ajustes',
 } as const

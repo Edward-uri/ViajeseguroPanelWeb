@@ -42,6 +42,12 @@ export {
   Power as PowerIcon,
   Coins as PriceIcon,
   ChevronDown as DropdownIcon,
+  UserCog as AdminsIcon,
+  UserPlus as InviteIcon,
+  UserX as RevokeIcon,
+  Send as ResendIcon,
+  Info as InfoIcon,
+  Menu as MenuIcon,
 } from 'lucide-react'
 
 export type { LucideIcon } from 'lucide-react'

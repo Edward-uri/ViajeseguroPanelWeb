@@ -25,7 +25,7 @@ export function VehicleDetailView() {
   }
   if (vm.error || !vm.detail) {
     return (
-      <div className="p-8">
+      <div className="p-4 sm:p-6 lg:p-8">
         <BackLink onClick={goBack} label="Volver a vehículos" />
         <div className="mt-6">
           <EmptyState
@@ -42,7 +42,7 @@ export function VehicleDetailView() {
   }
   const v = vm.detail
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <BackLink onClick={goBack} label="Volver a vehículos" />
       <div className="mb-6 mt-6 flex items-center gap-4">
         <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-warning-bg text-primary">
@@ -57,7 +57,7 @@ export function VehicleDetailView() {
         </div>
       </div>
 
-      <div className="mb-8 flex gap-12 rounded-2xl border border-border bg-white px-6 py-5">
+      <div className="mb-8 flex flex-wrap gap-x-12 gap-y-4 rounded-2xl border border-border bg-white px-6 py-5">
         <Info label="Modelo" value={v.modelo ?? '—'} />
         <Info label="Color" value={v.color ?? '—'} />
         <Info label="Año" value={v.anio != null ? String(v.anio) : '—'} />
@@ -68,7 +68,7 @@ export function VehicleDetailView() {
         <DocumentIcon size={18} className="text-ink-soft" />
         <h2 className="text-lg font-bold text-ink" style={jakarta}>Documentos ({v.documentos.length})</h2>
       </div>
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {v.documentos.map((doc) => <DocumentCard key={doc.tipo} document={doc} onReview={vm.openViewer} />)}
       </div>
 

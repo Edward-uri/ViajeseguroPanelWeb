@@ -1,15 +1,19 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { Modal } from '../../../shared/components/Modal'
 import { Button } from '../../../shared/components/Button'
-import { CloseIcon, PriceIcon } from '../../../shared/icons'
+import { CloseIcon, PriceIcon, InfoIcon } from '../../../shared/icons'
 import type { Zone, ZoneInput } from '../zone.types'
 import type { ZoneFormModalProps } from './ZoneFormModal.types'
+
+// El mapa (mapbox-gl ~230 KB) se carga aparte, solo al abrir el formulario.
+const ZoneMapPicker = lazy(() => import('./ZoneMapPicker').then((m) => ({ default: m.ZoneMapPicker })))
+const hasMapToken = !!import.meta.env.VITE_MAPBOX_TOKEN
 
 const jakarta = { fontFamily: 'var(--font-family-jakarta)' }
 
 export function ZoneFormModal({ open, zone, saving, onClose, onSubmit }: ZoneFormModalProps) {
   return (
-    <Modal isOpen={open} onClose={onClose} labelledById="zone-form-title" size="md">
+    <Modal isOpen={open} onClose={onClose} labelledById="zone-form-title" size="lg">
       {/* El formulario se monta al abrir y se desmonta al cerrar → estado fresco sin efecto. */}
       {open && <ZoneForm zone={zone} saving={saving} onClose={onClose} onSubmit={onSubmit} />}
     </Modal>
@@ -35,11 +39,17 @@ function ZoneForm({
   const precioNum = Number(precio)
   const latFilled = lat.trim() !== ''
   const lngFilled = lng.trim() !== ''
+  const latNum = latFilled ? Number(lat) : null
+  const lngNum = lngFilled ? Number(lng) : null
+  const hasPoint = latFilled && lngFilled
   const valid =
     nombre.trim().length > 0 &&
     precio.trim() !== '' && Number.isFinite(precioNum) && precioNum >= 0 &&
     (!latFilled || Number.isFinite(Number(lat))) &&
     (!lngFilled || Number.isFinite(Number(lng)))
+
+  const pickPoint = (la: number, ln: number) => { setLat(la.toFixed(6)); setLng(ln.toFixed(6)) }
+  const clearPoint = () => { setLat(''); setLng('') }
 
   const submit = () => {
     if (!valid || saving) return
@@ -69,10 +79,28 @@ function ZoneForm({
         <Field label="Tarifa (MXN)" value={precio} onChange={setPrecio} placeholder="25.50" type="number" disabled={saving} />
         <div>
           <p className="mb-2 text-xs font-medium text-ink-soft" style={jakarta}>Centro de la zona (opcional)</p>
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="Latitud" value={lat} onChange={setLat} placeholder="16.7530" type="number" disabled={saving} />
-            <Field label="Longitud" value={lng} onChange={setLng} placeholder="-93.1150" type="number" disabled={saving} />
-          </div>
+          {hasMapToken ? (
+            <>
+              <Suspense fallback={<div className="flex h-64 w-full items-center justify-center rounded-xl border border-border bg-neutral-bg text-sm text-ink-soft" style={jakarta}>Cargando mapa…</div>}>
+                <ZoneMapPicker lat={latNum} lng={lngNum} onChange={pickPoint} />
+              </Suspense>
+              <div className="mt-2 flex items-center justify-between gap-3 text-xs" style={jakarta}>
+                <span className="text-ink-soft">{hasPoint ? `Centro: ${lat}, ${lng}` : 'Toca el mapa o arrastra el pin para fijar el centro.'}</span>
+                {hasPoint && <button type="button" onClick={clearPoint} className="shrink-0 font-semibold text-red hover:underline">Limpiar</button>}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="mb-3 flex items-start gap-2 rounded-lg border border-border bg-neutral-bg px-3 py-2 text-xs text-ink-soft" style={jakarta}>
+                <InfoIcon size={14} className="mt-0.5 shrink-0" />
+                <span>Agrega VITE_MAPBOX_TOKEN en tu .env para fijar el centro en un mapa. Por ahora puedes capturarlo manual.</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="Latitud" value={lat} onChange={setLat} placeholder="16.7530" type="number" disabled={saving} />
+                <Field label="Longitud" value={lng} onChange={setLng} placeholder="-93.1150" type="number" disabled={saving} />
+              </div>
+            </>
+          )}
         </div>
       </div>
 

@@ -12,6 +12,7 @@ export interface AuthUser {
   idMunicipio: number | null
   fotoPerfilUrl: string | null
   fechaRegistro: string | null
+  esPropietario?: boolean
 }
 
 export interface Session {

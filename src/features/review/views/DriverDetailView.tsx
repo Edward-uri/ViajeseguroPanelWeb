@@ -27,7 +27,7 @@ export function DriverDetailView() {
   }
   if (vm.error || !vm.detail) {
     return (
-      <div className="p-8">
+      <div className="p-4 sm:p-6 lg:p-8">
         <BackLink onClick={goBack} label="Volver a la cola" />
         <div className="mt-6">
           <EmptyState
@@ -44,7 +44,7 @@ export function DriverDetailView() {
   }
   const d = vm.detail
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <BackLink onClick={goBack} label="Volver a la cola" />
       <div className="mb-6 mt-6 flex items-center gap-4">
         <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-ink text-lg font-bold text-white" style={jakarta}>{initials(nombre)}</span>
@@ -58,7 +58,7 @@ export function DriverDetailView() {
       </div>
 
       {d.licencia && (
-        <div className="mb-8 flex items-center gap-8 rounded-2xl border border-border bg-white px-6 py-5">
+        <div className="mb-8 flex flex-wrap items-center gap-x-8 gap-y-4 rounded-2xl border border-border bg-white px-6 py-5">
           <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-sidebar-active text-primary">
             <LicenseIcon size={24} />
           </span>
@@ -73,7 +73,7 @@ export function DriverDetailView() {
         <DocumentIcon size={18} className="text-ink-soft" />
         <h2 className="text-lg font-bold text-ink" style={jakarta}>Documentos ({d.documentos.length})</h2>
       </div>
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {d.documentos.map((doc) => <DocumentCard key={doc.tipo} document={doc} onReview={vm.openViewer} />)}
       </div>
 

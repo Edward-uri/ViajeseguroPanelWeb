@@ -12,7 +12,7 @@ const money = (n: number) => new Intl.NumberFormat('es-MX', { style: 'currency',
 export function ZonesView() {
   const vm = useZonesViewModel()
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <PageHeader
         title="Zonas y tarifas"
         subtitle="Precios fijos por zona en cada municipio"
@@ -48,7 +48,8 @@ export function ZonesView() {
       />
 
       {!vm.isLoading && !vm.error && vm.zones.length > 0 && (
-        <div className="overflow-hidden rounded-2xl border border-border bg-white">
+        <div className="overflow-x-auto">
+        <div className="min-w-[680px] overflow-hidden rounded-2xl border border-border bg-white">
           <div className="flex items-center gap-4 border-b border-border bg-surface px-6 py-3 text-xs font-semibold uppercase tracking-wide text-ink-soft" style={jakarta}>
             <span className="flex-1">Zona</span>
             <span className="w-32">Tarifa</span>
@@ -81,6 +82,7 @@ export function ZonesView() {
               </div>
             </div>
           ))}
+        </div>
         </div>
       )}
 

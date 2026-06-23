@@ -13,7 +13,7 @@ export function DriversListView() {
   const navigate = useNavigate()
   const { items, isLoading, error, retry } = useDriversListViewModel()
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <PageHeader title="Conductores" subtitle="Conductores con revisión pendiente" />
       <QueueState
         isLoading={isLoading}
@@ -26,7 +26,8 @@ export function DriversListView() {
         emptyAction={{ label: 'Ir a la cola de revisión', icon: QueueIcon, onClick: () => navigate(paths.revision) }}
       />
       {!isLoading && !error && items.length > 0 && (
-        <div className="overflow-hidden rounded-2xl border border-border bg-white">
+        <div className="overflow-x-auto">
+        <div className="min-w-[720px] overflow-hidden rounded-2xl border border-border bg-white">
           {items.map((d) => (
             <div key={d.idConductor} className="flex items-center gap-4 border-t border-border px-6 py-4 transition-colors first:border-t-0 hover:bg-surface">
               <div className="flex flex-1 items-center gap-3">
@@ -44,6 +45,7 @@ export function DriversListView() {
               <Button variant="outline" onClick={() => navigate(paths.driverDetail(d.idConductor), { state: { nombre: d.nombre, telefono: d.telefono } })}>Ver</Button>
             </div>
           ))}
+        </div>
         </div>
       )}
     </div>

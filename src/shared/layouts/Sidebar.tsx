@@ -1,12 +1,13 @@
 import { NavLink } from 'react-router-dom'
 import { Logo } from '../components/Logo'
-import { LogoutIcon } from '../icons'
+import { LogoutIcon, CloseIcon } from '../icons'
 import { navItems } from '../../routes/navigation'
 import { useAuth } from '../../features/auth/useAuth'
 import { useConfirm } from '../ui/confirm'
 import { notify } from '../ui/toast'
+import type { SidebarProps } from './Sidebar.types'
 
-export function Sidebar() {
+export function Sidebar({ open, onClose }: SidebarProps) {
   const { user, logout } = useAuth()
   const confirm = useConfirm()
   const initial = (user?.correoElectronico ?? 'A').charAt(0).toUpperCase()
@@ -25,10 +26,22 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="flex h-screen w-[260px] shrink-0 flex-col bg-white">
-      <div className="flex items-center gap-3 px-6 py-[26px]">
-        <Logo size={38} />
-        <span className="text-[24px] font-bold tracking-tight text-ink" style={{ fontFamily: 'var(--font-family-jakarta)' }}>Jala</span>
+    <aside
+      className={`fixed inset-y-0 left-0 z-30 m-3 flex w-[248px] shrink-0 flex-col overflow-hidden rounded-3xl border border-white/60 shadow-[0_12px_40px_-12px_rgba(26,20,16,0.30)] backdrop-blur-2xl transition-transform duration-300 ease-out lg:static lg:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-[120%]'}`}
+      style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0.60) 100%)' }}
+    >
+      <div className="flex items-center justify-between px-6 py-[26px]">
+        <div className="flex items-center gap-3">
+          <Logo size={38} />
+          <span className="text-[24px] font-bold tracking-tight text-ink" style={{ fontFamily: 'var(--font-family-jakarta)' }}>Jala</span>
+        </div>
+        <button
+          onClick={onClose}
+          aria-label="Cerrar menú"
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-white/55 hover:text-ink lg:hidden"
+        >
+          <CloseIcon size={20} />
+        </button>
       </div>
 
       <p className="px-7 pb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-placeholder" style={{ fontFamily: 'var(--font-family-jakarta)' }}>
@@ -39,11 +52,12 @@ export function Sidebar() {
           <NavLink
             key={item.to}
             to={item.to}
+            onClick={onClose}
             className={({ isActive }) =>
               `relative flex items-center gap-3 rounded-xl px-4 py-2.5 text-[15px] transition-colors duration-150 ${
                 isActive
-                  ? "bg-sidebar-active font-semibold text-primary before:absolute before:left-0 before:top-1/2 before:h-6 before:w-[3px] before:-translate-y-1/2 before:rounded-r-full before:bg-primary before:content-['']"
-                  : 'font-medium text-ink-soft hover:bg-surface hover:text-ink'
+                  ? "bg-sidebar-active font-semibold text-primary shadow-sm before:absolute before:left-0 before:top-1/2 before:h-6 before:w-[3px] before:-translate-y-1/2 before:rounded-r-full before:bg-primary before:content-['']"
+                  : 'font-medium text-ink-soft hover:bg-white/55 hover:text-ink'
               }`
             }
             style={{ fontFamily: 'var(--font-family-jakarta)' }}
@@ -54,7 +68,7 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="m-4 flex items-center gap-3 rounded-xl border border-border bg-surface px-3 py-3">
+      <div className="m-3 flex items-center gap-3 rounded-2xl border border-white/60 bg-white/45 px-3 py-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink text-base font-bold text-white" style={{ fontFamily: 'var(--font-family-jakarta)' }}>{initial}</div>
         <div className="flex min-w-0 flex-1 flex-col">
           <span className="truncate text-sm font-semibold text-ink" style={{ fontFamily: 'var(--font-family-jakarta)' }}>Administrador</span>
