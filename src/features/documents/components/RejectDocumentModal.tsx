@@ -13,11 +13,7 @@ export function RejectDocumentModal({ document, isOpen, onClose, onConfirm }: Re
   )
 }
 
-/**
- * Inner form is mounted as a child of Modal, so it unmounts when the modal
- * closes and remounts fresh on open — resetting `reason` every time without
- * an effect.
- */
+
 function RejectForm({
   document,
   onClose,

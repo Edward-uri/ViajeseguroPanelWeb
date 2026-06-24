@@ -15,7 +15,7 @@ export function useEditProfileViewModel() {
     setSaving(true)
     try {
       const user = await updateProfile(input)
-      authStore.setUser(user) // refleja el teléfono u otros cambios en la UI
+      authStore.setUser(user) 
       notify.success('Perfil actualizado.')
       setOpen(false)
     } catch (e) {

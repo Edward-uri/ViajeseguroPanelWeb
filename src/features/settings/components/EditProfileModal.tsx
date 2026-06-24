@@ -11,7 +11,6 @@ const PHONE_RE = /^\d{10,15}$/
 export function EditProfileModal({ open, saving, defaultPhone, onClose, onSubmit }: EditProfileModalProps) {
   return (
     <Modal isOpen={open} onClose={onClose} labelledById="edit-profile-title" size="md">
-      {/* Se monta al abrir y se desmonta al cerrar → estado fresco sin efecto. */}
       {open && <EditProfileForm saving={saving} defaultPhone={defaultPhone} onClose={onClose} onSubmit={onSubmit} />}
     </Modal>
   )

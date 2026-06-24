@@ -24,8 +24,7 @@ export function useDriverDetailViewModel(id: string | undefined) {
 
   const retry = useCallback(() => setTick((n) => n + 1), [])
 
-  // Single owner of the document object URL: revoke the previous blob whenever
-  // it changes, and on unmount, so blobs never leak.
+ 
   const setFile = useCallback((url: string | null) => {
     if (fileUrlRef.current && fileUrlRef.current !== url) URL.revokeObjectURL(fileUrlRef.current)
     fileUrlRef.current = url

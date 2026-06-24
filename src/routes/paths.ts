@@ -2,6 +2,7 @@ export const paths = {
   login: '/login',
   verificar: '/verificar',
   crearPassword: '/crear-password',
+  aceptarInvitacion: '/aceptar-invitacion',
   revision: '/revision',
   driverDetail: (id: string | number) => `/revision/${id}`,
   vehiculos: '/vehiculos',

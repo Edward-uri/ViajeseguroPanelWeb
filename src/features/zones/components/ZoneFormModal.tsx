@@ -5,7 +5,6 @@ import { CloseIcon, PriceIcon, InfoIcon } from '../../../shared/icons'
 import type { Zone, ZoneInput } from '../zone.types'
 import type { ZoneFormModalProps } from './ZoneFormModal.types'
 
-// El mapa (mapbox-gl ~230 KB) se carga aparte, solo al abrir el formulario.
 const ZoneMapPicker = lazy(() => import('./ZoneMapPicker').then((m) => ({ default: m.ZoneMapPicker })))
 const hasMapToken = !!import.meta.env.VITE_MAPBOX_TOKEN
 
@@ -14,7 +13,6 @@ const jakarta = { fontFamily: 'var(--font-family-jakarta)' }
 export function ZoneFormModal({ open, zone, saving, onClose, onSubmit }: ZoneFormModalProps) {
   return (
     <Modal isOpen={open} onClose={onClose} labelledById="zone-form-title" size="lg">
-      {/* El formulario se monta al abrir y se desmonta al cerrar → estado fresco sin efecto. */}
       {open && <ZoneForm zone={zone} saving={saving} onClose={onClose} onSubmit={onSubmit} />}
     </Modal>
   )

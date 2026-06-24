@@ -1,26 +1,31 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { getInvitations } from '../api/getInvitations'
+import { inviteAdmin } from '../api/inviteAdmin'
+import { revokeInvitation } from '../api/revokeInvitation'
 import { useConfirm } from '../../../shared/ui/confirm'
 import { notify } from '../../../shared/ui/toast'
 import { RevokeIcon } from '../../../shared/icons'
-import type { AdminAccount } from '../admin.types'
+import { friendlyMessage } from '../../../shared/api/errors'
+import type { AdminInvitation } from '../admin.types'
 
-/**
- * ViewModel de Administradores.
- *
- * ⚠️ Aún SIN backend: la lista está vacía (no se inventa data) y las acciones
- * son stubs que avisan al usuario. Para conectar más adelante:
- *   - Crear casos de uso en `features/admins/api/`:
- *       · listAdmins(): Promise<AdminAccount[]>        → reemplaza `admins = []`
- *       · inviteAdmin(correo): Promise<void>           → en `invite`
- *       · resendInvite(idUsuario): Promise<void>       → en `resendInvite`
- *       · revokeAdmin(idUsuario): Promise<void>        → en `revokeAccess`
- *   - Cambiar los `notify.info(...)` por la llamada real + refresco de la lista.
- */
 export function useAdminsViewModel() {
   const confirm = useConfirm()
-  const [admins] = useState<AdminAccount[]>([]) // sin datos hasta conectar el backend
+  const [invitations, setInvitations] = useState<AdminInvitation[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [tick, setTick] = useState(0)
   const [inviteOpen, setInviteOpen] = useState(false)
   const [sending, setSending] = useState(false)
+
+  const retry = useCallback(() => setTick((n) => n + 1), [])
+
+  useEffect(() => {
+    let active = true
+    getInvitations()
+      .then((list) => { if (active) { setInvitations(list); setError(null); setIsLoading(false) } })
+      .catch((e) => { if (active) { setError(friendlyMessage(e)); setIsLoading(false) } })
+    return () => { active = false }
+  }, [tick])
 
   const openInvite = () => setInviteOpen(true)
   const closeInvite = () => setInviteOpen(false)
@@ -28,32 +33,44 @@ export function useAdminsViewModel() {
   const invite = async (correo: string): Promise<void> => {
     setSending(true)
     try {
-      // TODO(backend): await inviteAdmin(correo); luego refrescar la lista.
-      await Promise.resolve()
-      notify.info(`Vista lista: la invitación a ${correo} se enviará al conectar el backend.`)
+      await inviteAdmin(correo)
+      notify.success(`Invitación enviada a ${correo}.`)
       setInviteOpen(false)
+      setTick((n) => n + 1)
+    } catch (e) {
+      notify.error(e)
     } finally {
       setSending(false)
     }
   }
 
-  const resendInvite = async (admin: AdminAccount): Promise<void> => {
-    // TODO(backend): await resendInvite(admin.idUsuario); luego toast de éxito.
-    notify.info(`Reenviar invitación a ${admin.correo} estará disponible al conectar el backend.`)
+  const resendInvite = async (inv: AdminInvitation): Promise<void> => {
+    try {
+      await inviteAdmin(inv.correo)
+      notify.success(`Invitación reenviada a ${inv.correo}.`)
+      setTick((n) => n + 1)
+    } catch (e) {
+      notify.error(e)
+    }
   }
 
-  const revokeAccess = async (admin: AdminAccount): Promise<void> => {
+  const revokeInvite = async (inv: AdminInvitation): Promise<void> => {
     const ok = await confirm({
-      title: 'Revocar acceso',
-      message: `${admin.correo} dejará de tener acceso al panel. ¿Continuar?`,
+      title: 'Revocar invitación',
+      message: `La invitación a ${inv.correo} quedará sin efecto. ¿Continuar?`,
       confirmLabel: 'Revocar',
       tone: 'danger',
       icon: RevokeIcon,
     })
     if (!ok) return
-    // TODO(backend): await revokeAdmin(admin.idUsuario); luego refrescar la lista.
-    notify.info('Revocar acceso estará disponible al conectar el backend.')
+    try {
+      await revokeInvitation(inv.idInvitacion)
+      notify.success('Invitación revocada.')
+      setTick((n) => n + 1)
+    } catch (e) {
+      notify.error(e)
+    }
   }
 
-  return { admins, inviteOpen, sending, openInvite, closeInvite, invite, resendInvite, revokeAccess }
+  return { invitations, isLoading, error, retry, inviteOpen, sending, openInvite, closeInvite, invite, resendInvite, revokeInvite }
 }

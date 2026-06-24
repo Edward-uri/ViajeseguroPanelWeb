@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { AppLayout } from '../shared/layouts/AppLayout'
 import { RequireAuth } from '../features/auth/RequireAuth'
-import { LoginView, CodeVerificationView, CreatePasswordView } from '../features/auth'
+import { LoginView, CodeVerificationView, CreatePasswordView, AcceptInvitationView } from '../features/auth'
 import { ReviewQueueView, DriverDetailView } from '../features/review'
 import { VehicleQueueView, VehicleDetailView } from '../features/vehicles'
 import { DriversListView } from '../features/drivers'
@@ -34,6 +34,7 @@ export function AppRouter() {
         <Route path={paths.login} element={<LoginView />} />
         <Route path={paths.verificar} element={<CodeVerificationView />} />
         <Route path={paths.crearPassword} element={<CreatePasswordView />} />
+        <Route path={paths.aceptarInvitacion} element={<AcceptInvitationView />} />
         <Route element={<RequireAuth />}>
           <Route element={<AppLayout />}>
             {privateRoutes.map((r) => (

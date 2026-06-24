@@ -3,7 +3,6 @@ import Map, { Marker, NavigationControl } from 'react-map-gl/mapbox'
 import type { ZoneMapPickerProps } from './ZoneMapPicker.types'
 
 const TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
-// Centro por defecto: zona de Tuxtla Gutiérrez / Suchiapa, Chiapas.
 const DEFAULT_VIEW = { longitude: -93.115, latitude: 16.753, zoom: 11 }
 
 export function ZoneMapPicker({ lat, lng, onChange }: ZoneMapPickerProps) {

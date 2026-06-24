@@ -4,6 +4,7 @@ export const endpoints = {
     loginVerify: '/auth/login/verify',
     loginPassword: '/auth/login/password',
     setPassword: '/auth/password',
+    acceptInvitation: '/auth/invitaciones/aceptar',
     refresh: '/auth/refresh',
     logout: '/auth/logout',
   },
@@ -20,5 +21,7 @@ export const endpoints = {
     vehicleDocFile: (id: number) => `/admin/vehiculos/documentos/${id}/archivo`,
     zones: (idMunicipio: number) => `/admin/municipios/${idMunicipio}/zonas`,
     zone: (idMunicipio: number, idZona: number) => `/admin/municipios/${idMunicipio}/zonas/${idZona}`,
+    invitations: '/admin/invitaciones',
+    invitation: (id: number) => `/admin/invitaciones/${id}`,
   },
 } as const
