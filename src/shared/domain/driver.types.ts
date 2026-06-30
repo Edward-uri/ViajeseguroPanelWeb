@@ -6,9 +6,17 @@ export interface DriverLicense {
   vence: string | null
 }
 
+export interface DriverVehicle {
+  idVehiculo: number
+  placa: string
+  estadoVerificacion: VerificationStatus
+}
+
 export interface DriverDetail {
   idConductor: number
   estadoVerificacion: VerificationStatus
   licencia: DriverLicense | null
   documentos: ReviewDocument[]
+  /** Vehículo propio del conductor (null si aún no registra uno). */
+  vehiculo: DriverVehicle | null
 }

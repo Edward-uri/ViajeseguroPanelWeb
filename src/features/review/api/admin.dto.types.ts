@@ -12,9 +12,20 @@ export interface DriverQueueDTO {
   documentosPendientes: number
 }
 
-export interface OnboardingConductorDTO {
+export interface ConductorVehiculoDTO {
+  idVehiculo: number
+  placa: string
   estadoVerificacion: 'incompleto' | 'en_revision' | 'rechazado' | 'aprobado'
+}
+
+export interface OnboardingConductorDTO {
+  /** Estado solo de los documentos personales del conductor. */
+  estadoVerificacion: 'incompleto' | 'en_revision' | 'rechazado' | 'aprobado'
+  /** Estado combinado (documentos + vehículo): si el conductor puede operar. */
+  estadoGlobal: 'incompleto' | 'en_revision' | 'rechazado' | 'aprobado'
   licencia: { numero: string; expedicion: string | null; vence: string | null } | null
   requeridos: string[]
   documentos: DocItemDTO[]
+  /** Vehículo propio del conductor (null si aún no registra uno). */
+  vehiculo: ConductorVehiculoDTO | null
 }

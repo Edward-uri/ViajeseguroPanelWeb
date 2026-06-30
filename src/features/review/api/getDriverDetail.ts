@@ -22,5 +22,6 @@ export async function getDriverDetail(id: string | number): Promise<DriverDetail
     estadoVerificacion: dto.estadoVerificacion,
     licencia: dto.licencia,
     documentos: dto.documentos.map(mapDoc),
+    vehiculo: dto.vehiculo,
   }
 }

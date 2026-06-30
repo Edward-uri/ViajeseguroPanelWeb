@@ -1,13 +1,24 @@
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { useDriverDetailViewModel } from '../viewmodels/useDriverDetailViewModel'
 import { StatusBadge } from '../../../shared/components/StatusBadge'
+import type { BadgeVariant } from '../../../shared/components/StatusBadge'
 import { EmptyState } from '../../../shared/components/EmptyState'
-import { BackIcon, LicenseIcon, DocumentIcon, WarningIcon, RefreshIcon, SpinnerIcon } from '../../../shared/icons'
+import { BackIcon, LicenseIcon, VehicleIcon, DocumentIcon, WarningIcon, RefreshIcon, SpinnerIcon } from '../../../shared/icons'
 import { DocumentCard, DocumentViewerModal, RejectDocumentModal } from '../../documents'
 import { paths } from '../../../routes/paths'
+import type { VerificationStatus } from '../../../shared/domain'
 
 const initials = (name: string) => name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()
 const jakarta = { fontFamily: 'var(--font-family-jakarta)' }
+
+const verifBadge = (estado: VerificationStatus): { label: string; variant: BadgeVariant } => {
+  switch (estado) {
+    case 'aprobado': return { label: 'Aprobado', variant: 'aprobado' }
+    case 'rechazado': return { label: 'Rechazado', variant: 'rechazado' }
+    case 'en_revision': return { label: 'En revisión', variant: 'en_revision' }
+    default: return { label: 'Incompleto', variant: 'pendiente' }
+  }
+}
 
 export function DriverDetailView() {
   const navigate = useNavigate()
@@ -68,6 +79,30 @@ export function DriverDetailView() {
           <div className="ml-auto self-center text-sm font-medium text-ink-soft" style={jakarta}>Licencia de conducir</div>
         </div>
       )}
+
+      <div className="mb-8 flex flex-wrap items-center gap-x-8 gap-y-4 rounded-2xl border border-border bg-white px-6 py-5">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-sidebar-active text-primary">
+          <VehicleIcon size={24} />
+        </span>
+        {d.vehiculo ? (
+          <>
+            <Info label="Placa" value={d.vehiculo.placa} />
+            <div>
+              <div className="text-xs text-placeholder" style={jakarta}>Estado del vehículo</div>
+              <div className="mt-1">
+                <StatusBadge variant={verifBadge(d.vehiculo.estadoVerificacion).variant}>
+                  {verifBadge(d.vehiculo.estadoVerificacion).label}
+                </StatusBadge>
+              </div>
+            </div>
+            <div className="ml-auto self-center text-sm font-medium text-ink-soft" style={jakarta}>Vehículo del conductor</div>
+          </>
+        ) : (
+          <div className="text-sm text-ink-soft" style={jakarta}>
+            Sin vehículo registrado — el conductor no podrá operar hasta registrar y aprobar uno.
+          </div>
+        )}
+      </div>
 
       <div className="mb-4 flex items-center gap-2">
         <DocumentIcon size={18} className="text-ink-soft" />
