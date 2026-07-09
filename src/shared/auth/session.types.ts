@@ -6,6 +6,8 @@ export interface AuthUser {
   telefono: string
   correoElectronico: string | null
   rol: Rol
+  // multi-rol: presente desde backend fase 2; rol = principal derivado
+  roles?: Rol[]
   estadoCuenta: EstadoCuenta
   telefonoVerificado: boolean
   tienePassword: boolean
