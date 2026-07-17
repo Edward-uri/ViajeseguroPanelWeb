@@ -12,6 +12,7 @@ export const endpoints = {
   catalog: { municipios: '/municipios' },
   admin: {
     driverQueue: '/admin/conductores/pendientes',
+    drivers: '/admin/conductores',
     driverDetail: (id: string | number) => `/admin/conductores/${id}`,
     driverDocPatch: (id: number) => `/admin/documentos/${id}`,
     driverDocFile: (id: number) => `/admin/documentos/${id}/archivo`,
