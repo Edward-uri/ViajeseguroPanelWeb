@@ -14,6 +14,9 @@ const MOTIVOS: Record<string, string> = {
 
 export const motivoLabel = (motivo: string): string => MOTIVOS[motivo] ?? motivo
 
+/** Rol del reportado → etiqueta legible. */
+export const rolLabel = (rol: string): string => (rol === 'pasajero' ? 'Pasajero' : 'Conductor')
+
 /** Estado de la cuenta (usuarios.estado_cuenta) → etiqueta + variante de badge. */
 export function estadoCuentaBadge(estado: string): { label: string; variant: BadgeVariant } {
   switch (estado) {

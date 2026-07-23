@@ -16,9 +16,9 @@ export function useConductorAdminActions(onDone: () => void) {
 
   const vetar = useCallback(async (id: number, nombre: string | null) => {
     const ok = await confirm({
-      title: 'Desactivar y vetar conductor',
+      title: 'Desactivar y vetar',
       message:
-        `Se suspenderá la cuenta de ${nombre ?? 'este conductor'} y se cerrarán sus sesiones de inmediato. ` +
+        `Se suspenderá la cuenta de ${nombre ?? 'este usuario'} y se cerrarán sus sesiones de inmediato. ` +
         'No podrá iniciar sesión ni operar hasta que lo reactives.',
       confirmLabel: 'Desactivar y vetar',
       tone: 'danger',
@@ -39,8 +39,8 @@ export function useConductorAdminActions(onDone: () => void) {
 
   const reactivar = useCallback(async (id: number, nombre: string | null) => {
     const ok = await confirm({
-      title: 'Reactivar conductor',
-      message: `Se reactivará la cuenta de ${nombre ?? 'este conductor'}. Podrá volver a iniciar sesión y operar.`,
+      title: 'Reactivar usuario',
+      message: `Se reactivará la cuenta de ${nombre ?? 'este usuario'}. Podrá volver a iniciar sesión y operar.`,
       confirmLabel: 'Reactivar',
       icon: PowerIcon,
     })

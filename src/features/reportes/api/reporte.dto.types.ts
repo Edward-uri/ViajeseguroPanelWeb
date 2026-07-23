@@ -1,6 +1,9 @@
-/** Fila de la lista admin: un conductor con su acumulado de reportes. */
-export interface ConductorReportadoDto {
-  idConductor: number
+export type RolReportado = 'conductor' | 'pasajero'
+
+/** Fila de la lista admin: un usuario reportado en un rol, con su acumulado. */
+export interface UsuarioReportadoDto {
+  idUsuario: number
+  rol: RolReportado
   nombre: string | null
   conteo: number
   ultimoReporte: string | null
@@ -8,8 +11,8 @@ export interface ConductorReportadoDto {
 }
 
 /** Respuesta paginada + el umbral de veto configurado en el backend. */
-export interface ListaConductoresReportadosDto {
-  data: ConductorReportadoDto[]
+export interface ListaUsuariosReportadosDto {
+  data: UsuarioReportadoDto[]
   page: number
   perPage: number
   total: number
@@ -28,9 +31,10 @@ export interface ReporteConReportanteDto {
   creadoEn: string | null
 }
 
-/** Detalle admin: contacto del conductor + sus reportes + umbral. */
-export interface DetalleConductorReportadoDto {
-  idConductor: number
+/** Detalle admin: contacto del usuario + sus reportes en ese rol + umbral. */
+export interface DetalleUsuarioReportadoDto {
+  idUsuario: number
+  rol: RolReportado
   nombre: string | null
   telefono: string | null
   correo: string | null

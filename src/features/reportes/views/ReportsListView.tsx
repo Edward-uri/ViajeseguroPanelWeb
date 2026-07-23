@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useReportsListViewModel } from '../viewmodels/useReportsListViewModel'
-import { estadoCuentaBadge, formatFecha } from '../models/reporteLabels'
+import { estadoCuentaBadge, formatFecha, rolLabel } from '../models/reporteLabels'
 import { PageHeader } from '../../../shared/components/PageHeader'
 import { StatusBadge } from '../../../shared/components/StatusBadge'
 import { QueueState } from '../../../shared/components/QueueState'
@@ -8,7 +8,7 @@ import { Pagination } from '../../../shared/components/Pagination'
 import { Button } from '../../../shared/components/Button'
 import { ReportsIcon, ClockIcon, WarningIcon } from '../../../shared/icons'
 import { paths } from '../../../routes/paths'
-import type { ConductorReportadoDto } from '../api/reporte.dto.types'
+import type { UsuarioReportadoDto } from '../api/reporte.dto.types'
 
 const initials = (name: string | null) =>
   (name ?? '?').split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()
@@ -23,13 +23,13 @@ export function ReportsListView() {
     <div className="p-4 sm:p-6 lg:p-8">
       <PageHeader
         title="Reportes"
-        subtitle="Conductores con reportes de pasajeros, ordenados por cantidad"
+        subtitle="Conductores y pasajeros con reportes, ordenados por cantidad"
       />
 
       {umbral > 0 && (
         <div className="mb-4 flex items-center gap-2 rounded-xl border border-border bg-white px-4 py-2.5 text-sm text-ink-soft" style={jakarta}>
           <WarningIcon size={16} className="shrink-0 text-warning" />
-          Un conductor se marca para veto al acumular <strong className="text-ink">{umbral}</strong> reportes o más.
+          Un usuario se marca para veto al acumular <strong className="text-ink">{umbral}</strong> reportes o más.
         </div>
       )}
 
@@ -40,17 +40,20 @@ export function ReportsListView() {
         onRetry={retry}
         emptyIcon={ReportsIcon}
         emptyTitle="Sin reportes"
-        emptyDescription="Ningún conductor tiene reportes de pasajeros por ahora."
+        emptyDescription="Nadie tiene reportes por ahora."
       />
 
       {!isLoading && !error && items.length > 0 && (
         <>
           <div className="overflow-x-auto">
-            <div className="min-w-[720px] overflow-hidden rounded-2xl border border-border bg-white">
-              {items.map((c) => (
-                <Row key={c.idConductor} c={c} umbral={umbral} onOpen={() =>
-                  navigate(paths.reporteDetail(c.idConductor), { state: { nombre: c.nombre } })
-                } />
+            <div className="min-w-[820px] overflow-hidden rounded-2xl border border-border bg-white">
+              {items.map((u) => (
+                <Row
+                  key={`${u.rol}-${u.idUsuario}`}
+                  u={u}
+                  umbral={umbral}
+                  onOpen={() => navigate(paths.reporteDetail(u.rol, u.idUsuario), { state: { nombre: u.nombre } })}
+                />
               ))}
             </div>
           </div>
@@ -61,20 +64,31 @@ export function ReportsListView() {
   )
 }
 
-function Row({ c, umbral, onOpen }: { c: ConductorReportadoDto; umbral: number; onOpen: () => void }) {
-  const badge = estadoCuentaBadge(c.estadoCuenta)
-  const alerta = umbral > 0 && c.conteo >= umbral
+function RolPill({ rol }: { rol: string }) {
+  const cls = rol === 'pasajero' ? 'bg-neutral-bg text-ink-soft' : 'bg-sidebar-active text-primary'
+  return (
+    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${cls}`} style={jakarta}>
+      {rolLabel(rol)}
+    </span>
+  )
+}
+
+function Row({ u, umbral, onOpen }: { u: UsuarioReportadoDto; umbral: number; onOpen: () => void }) {
+  const badge = estadoCuentaBadge(u.estadoCuenta)
+  const alerta = umbral > 0 && u.conteo >= umbral
   return (
     <div className="flex items-center gap-4 border-t border-border px-6 py-4 transition-colors first:border-t-0 hover:bg-surface">
-      <div className="flex w-64 shrink-0 items-center gap-3">
+      <div className="flex w-56 shrink-0 items-center gap-3">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink text-sm font-bold text-white" style={jakarta}>
-          {initials(c.nombre)}
+          {initials(u.nombre)}
         </span>
         <div className="min-w-0">
-          <div className="truncate text-sm font-semibold text-ink" style={jakarta}>{c.nombre ?? 'Sin nombre'}</div>
-          <div className="text-xs text-ink-soft" style={jakarta}>ID {c.idConductor}</div>
+          <div className="truncate text-sm font-semibold text-ink" style={jakarta}>{u.nombre ?? 'Sin nombre'}</div>
+          <div className="text-xs text-ink-soft" style={jakarta}>ID {u.idUsuario}</div>
         </div>
       </div>
+
+      <div className="w-28 shrink-0"><RolPill rol={u.rol} /></div>
 
       <div className="w-32 shrink-0">
         <StatusBadge variant={badge.variant}>{badge.label}</StatusBadge>
@@ -82,7 +96,7 @@ function Row({ c, umbral, onOpen }: { c: ConductorReportadoDto; umbral: number; 
 
       <div className="flex w-40 shrink-0 items-center gap-1.5 text-xs text-ink-soft" style={jakarta}>
         <ClockIcon size={14} className="shrink-0 text-placeholder" />
-        {formatFecha(c.ultimoReporte)}
+        {formatFecha(u.ultimoReporte)}
       </div>
 
       <div className="flex flex-1 items-center gap-2">
@@ -93,7 +107,7 @@ function Row({ c, umbral, onOpen }: { c: ConductorReportadoDto; umbral: number; 
           style={jakarta}
         >
           {alerta && <WarningIcon size={14} />}
-          {c.conteo} {c.conteo === 1 ? 'reporte' : 'reportes'}
+          {u.conteo} {u.conteo === 1 ? 'reporte' : 'reportes'}
         </span>
       </div>
 

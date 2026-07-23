@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
-import { getReportedDrivers } from '../api/getReportedDrivers'
+import { getReportedUsers } from '../api/getReportedUsers'
 import { friendlyMessage } from '../../../shared/api/errors'
-import type { ConductorReportadoDto } from '../api/reporte.dto.types'
+import type { UsuarioReportadoDto } from '../api/reporte.dto.types'
 
 const PER_PAGE = 10
 
 export function useReportsListViewModel() {
-  const [items, setItems] = useState<ConductorReportadoDto[]>([])
+  const [items, setItems] = useState<UsuarioReportadoDto[]>([])
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [total, setTotal] = useState(0)
@@ -20,7 +20,7 @@ export function useReportsListViewModel() {
 
   useEffect(() => {
     const ctrl = new AbortController()
-    getReportedDrivers(page, PER_PAGE, ctrl.signal)
+    getReportedUsers(page, PER_PAGE, ctrl.signal)
       .then((res) => {
         setItems(res.data)
         setTotal(res.total)

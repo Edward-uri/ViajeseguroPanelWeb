@@ -24,9 +24,9 @@ export const endpoints = {
     zone: (idMunicipio: number, idZona: number) => `/admin/municipios/${idMunicipio}/zonas/${idZona}`,
     invitations: '/admin/invitaciones',
     invitation: (id: number) => `/admin/invitaciones/${id}`,
-    reportes: '/admin/reportes/conductores',
-    reporteDetail: (id: string | number) => `/admin/reportes/conductores/${id}`,
-    vetarConductor: (id: string | number) => `/admin/reportes/conductores/${id}/vetar`,
-    reactivarConductor: (id: string | number) => `/admin/reportes/conductores/${id}/reactivar`,
+    reportes: '/admin/reportes/usuarios',
+    reporteDetail: (id: string | number) => `/admin/reportes/usuarios/${id}`,
+    vetarConductor: (id: string | number) => `/admin/reportes/usuarios/${id}/vetar`,
+    reactivarConductor: (id: string | number) => `/admin/reportes/usuarios/${id}/reactivar`,
   },
 } as const
