@@ -1,2 +1,2 @@
 export { ReportsListView } from './views/ReportsListView'
-export { ReportedDriverDetailView } from './views/ReportedDriverDetailView'
+export { ReportedUserDetailView } from './views/ReportedUserDetailView'

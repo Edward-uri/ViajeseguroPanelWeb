@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
-import { getReportedDriverDetail } from '../api/getReportedDriverDetail'
+import { getReportedUserDetail } from '../api/getReportedUserDetail'
 import { useConductorAdminActions } from './useConductorAdminActions'
 import { friendlyMessage } from '../../../shared/api/errors'
-import type { DetalleConductorReportadoDto } from '../api/reporte.dto.types'
+import type { RolReportado, DetalleUsuarioReportadoDto } from '../api/reporte.dto.types'
 
-export function useReportedDriverDetailViewModel(id: string | undefined) {
-  const [detail, setDetail] = useState<DetalleConductorReportadoDto | null>(null)
+export function useReportedUserDetailViewModel(id: string | undefined, rol: RolReportado | undefined) {
+  const [detail, setDetail] = useState<DetalleUsuarioReportadoDto | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [tick, setTick] = useState(0)
@@ -14,16 +14,16 @@ export function useReportedDriverDetailViewModel(id: string | undefined) {
   const actions = useConductorAdminActions(retry)
 
   useEffect(() => {
-    if (!id) return
+    if (!id || !rol) return
     const ctrl = new AbortController()
-    getReportedDriverDetail(id, ctrl.signal)
+    getReportedUserDetail(id, rol, ctrl.signal)
       .then((d) => { setDetail(d); setError(null); setIsLoading(false) })
       .catch((e) => {
         if (ctrl.signal.aborted) return
         setError(friendlyMessage(e)); setIsLoading(false)
       })
     return () => ctrl.abort()
-  }, [id, tick])
+  }, [id, rol, tick])
 
   return { detail, isLoading, error, retry, ...actions }
 }
