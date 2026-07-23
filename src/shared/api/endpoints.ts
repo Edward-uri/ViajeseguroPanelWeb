@@ -24,5 +24,8 @@ export const endpoints = {
     zone: (idMunicipio: number, idZona: number) => `/admin/municipios/${idMunicipio}/zonas/${idZona}`,
     invitations: '/admin/invitaciones',
     invitation: (id: number) => `/admin/invitaciones/${id}`,
+    reportes: '/admin/reportes/conductores',
+    reporteDetail: (id: string | number) => `/admin/reportes/conductores/${id}`,
+    vetarConductor: (id: string | number) => `/admin/reportes/conductores/${id}/vetar`,
   },
 } as const

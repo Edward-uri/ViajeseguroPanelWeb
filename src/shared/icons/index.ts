@@ -48,6 +48,9 @@ export {
   Send as ResendIcon,
   Info as InfoIcon,
   Menu as MenuIcon,
+  Flag as ReportsIcon,
+  Ban as BanIcon,
+  Clock as ClockIcon,
 } from 'lucide-react'
 
 export type { LucideIcon } from 'lucide-react'
