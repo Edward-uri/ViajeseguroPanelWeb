@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getDrivers } from '../api/getDrivers'
+import { useConductorAdminActions } from '../../reportes/viewmodels/useConductorAdminActions'
 import { friendlyMessage } from '../../../shared/api/errors'
 import type { VerificationStatus } from '../../../shared/domain'
 import type { DriverAdminDto } from '../api/driver.dto.types'
@@ -14,6 +15,7 @@ export function useDriversListViewModel() {
   const [tick, setTick] = useState(0)
 
   const retry = useCallback(() => setTick((n) => n + 1), [])
+  const actions = useConductorAdminActions(retry)
 
   useEffect(() => {
     let active = true
@@ -33,5 +35,5 @@ export function useDriversListViewModel() {
     return c
   }, [all])
 
-  return { items, conteos, filtro, setFiltro, isLoading, error, retry }
+  return { items, conteos, filtro, setFiltro, isLoading, error, retry, ...actions }
 }

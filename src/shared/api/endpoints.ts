@@ -27,5 +27,6 @@ export const endpoints = {
     reportes: '/admin/reportes/conductores',
     reporteDetail: (id: string | number) => `/admin/reportes/conductores/${id}`,
     vetarConductor: (id: string | number) => `/admin/reportes/conductores/${id}/vetar`,
+    reactivarConductor: (id: string | number) => `/admin/reportes/conductores/${id}/reactivar`,
   },
 } as const

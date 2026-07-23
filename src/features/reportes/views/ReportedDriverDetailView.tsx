@@ -1,12 +1,12 @@
 import type { ReactNode } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { useReportedDriverDetailViewModel } from '../viewmodels/useReportedDriverDetailViewModel'
-import { estadoCuentaBadge, motivoLabel, formatFecha, puedeVetar } from '../models/reporteLabels'
+import { estadoCuentaBadge, motivoLabel, formatFecha, puedeVetar, puedeReactivar } from '../models/reporteLabels'
 import { StatusBadge } from '../../../shared/components/StatusBadge'
 import { EmptyState } from '../../../shared/components/EmptyState'
 import { Button } from '../../../shared/components/Button'
 import {
-  BackIcon, WarningIcon, RefreshIcon, SpinnerIcon, PhoneIcon, MailIcon, BanIcon, ReportsIcon,
+  BackIcon, WarningIcon, RefreshIcon, SpinnerIcon, PhoneIcon, MailIcon, BanIcon, PowerIcon, ReportsIcon,
 } from '../../../shared/icons'
 import { paths } from '../../../routes/paths'
 import type { ReporteConReportanteDto } from '../api/reporte.dto.types'
@@ -53,6 +53,8 @@ export function ReportedDriverDetailView() {
   const badge = estadoCuentaBadge(d.estadoCuenta)
   const alerta = d.umbral > 0 && d.conteo >= d.umbral
   const vetable = puedeVetar(d.estadoCuenta)
+  const reactivable = puedeReactivar(d.estadoCuenta)
+  const busy = vm.busyId === d.idConductor
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -77,11 +79,11 @@ export function ReportedDriverDetailView() {
         <Contact icon={<MailIcon size={16} />} label="Correo" value={d.correo} href={d.correo ? `mailto:${d.correo}` : undefined} />
       </div>
 
-      {/* Veto */}
+      {/* Moderación */}
       <div className={`mb-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border px-6 py-5 ${alerta && vetable ? 'border-red/30 bg-danger-bg' : 'border-border bg-white'}`}>
         <div className="flex items-start gap-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-danger-bg text-red">
-            <BanIcon size={22} />
+          <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${reactivable ? 'bg-success-bg text-success' : 'bg-danger-bg text-red'}`}>
+            {reactivable ? <PowerIcon size={22} /> : <BanIcon size={22} />}
           </span>
           <div>
             <div className="text-base font-bold text-ink" style={jakarta}>
@@ -89,14 +91,21 @@ export function ReportedDriverDetailView() {
             </div>
             <p className="mt-0.5 max-w-lg text-sm text-ink-soft" style={jakarta}>
               {vetable
-                ? 'Vetar suspende la cuenta y cierra sus sesiones de inmediato. No se revierte desde el panel.'
-                : `La cuenta está ${badge.label.toLowerCase()}; no requiere acción.`}
+                ? 'Vetar suspende la cuenta y cierra sus sesiones de inmediato. Podrás reactivarlo más tarde.'
+                : reactivable
+                  ? 'La cuenta está suspendida. Puedes reactivarla para que vuelva a operar.'
+                  : 'La cuenta está eliminada; no requiere acción.'}
             </p>
           </div>
         </div>
         {vetable && (
-          <Button variant="danger" icon={BanIcon} isLoading={vm.vetando} onClick={vm.vetar}>
+          <Button variant="danger" icon={BanIcon} isLoading={busy} onClick={() => vm.vetar(d.idConductor, nombre)}>
             Desactivar y vetar
+          </Button>
+        )}
+        {reactivable && (
+          <Button variant="success" icon={PowerIcon} isLoading={busy} onClick={() => vm.reactivar(d.idConductor, nombre)}>
+            Reactivar
           </Button>
         )}
       </div>

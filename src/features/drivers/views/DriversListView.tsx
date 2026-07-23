@@ -5,7 +5,8 @@ import { StatusBadge } from '../../../shared/components/StatusBadge'
 import type { BadgeVariant } from '../../../shared/components/StatusBadge'
 import { Button } from '../../../shared/components/Button'
 import { QueueState } from '../../../shared/components/QueueState'
-import { DriversIcon, PhoneIcon, VehicleIcon } from '../../../shared/icons'
+import { DriversIcon, PhoneIcon, VehicleIcon, BanIcon, PowerIcon } from '../../../shared/icons'
+import { estadoCuentaBadge, puedeVetar, puedeReactivar } from '../../reportes/models/reporteLabels'
 import { paths } from '../../../routes/paths'
 import type { VerificationStatus } from '../../../shared/domain'
 
@@ -29,7 +30,8 @@ const FILTROS: { key: FiltroEstado; label: string }[] = [
 
 export function DriversListView() {
   const navigate = useNavigate()
-  const { items, conteos, filtro, setFiltro, isLoading, error, retry } = useDriversListViewModel()
+  const { items, conteos, filtro, setFiltro, isLoading, error, retry, vetar, reactivar, busyId } =
+    useDriversListViewModel()
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <PageHeader title="Conductores" subtitle="Todos los conductores registrados y sus vehículos" />
@@ -60,7 +62,7 @@ export function DriversListView() {
       />
       {!isLoading && !error && items.length > 0 && (
         <div className="overflow-x-auto">
-          <div className="min-w-[860px] overflow-hidden rounded-2xl border border-border bg-white">
+          <div className="min-w-[980px] overflow-hidden rounded-2xl border border-border bg-white">
             {items.map((d) => (
               <div key={d.idConductor} className="flex items-center gap-4 border-t border-border px-6 py-4 transition-colors first:border-t-0 hover:bg-surface">
                 <div className="flex w-56 shrink-0 items-center gap-3">
@@ -74,8 +76,13 @@ export function DriversListView() {
                   <PhoneIcon size={15} className="shrink-0 text-placeholder" />
                   {d.telefono ?? '—'}
                 </div>
-                <div className="w-32 shrink-0">
+                <div className="flex w-32 shrink-0 flex-col items-start gap-1.5">
                   <StatusBadge variant={BADGE[d.estadoVerificacion].variant}>{BADGE[d.estadoVerificacion].label}</StatusBadge>
+                  {d.estadoCuenta !== 'activo' && (
+                    <StatusBadge variant={estadoCuentaBadge(d.estadoCuenta).variant}>
+                      {estadoCuentaBadge(d.estadoCuenta).label}
+                    </StatusBadge>
+                  )}
                 </div>
                 <div className="flex flex-1 flex-wrap items-center gap-2" style={jakarta}>
                   {d.vehiculos.length === 0 && <span className="text-xs text-placeholder">Sin vehículos</span>}
@@ -93,7 +100,15 @@ export function DriversListView() {
                     </span>
                   ))}
                 </div>
-                <Button variant="outline" onClick={() => navigate(paths.driverDetail(d.idConductor), { state: { nombre: d.nombre, telefono: d.telefono } })}>Ver</Button>
+                <div className="flex shrink-0 items-center gap-2">
+                  <Button variant="outline" size="sm" onClick={() => navigate(paths.driverDetail(d.idConductor), { state: { nombre: d.nombre, telefono: d.telefono } })}>Ver</Button>
+                  {puedeVetar(d.estadoCuenta) && (
+                    <Button variant="dangerOutline" size="sm" icon={BanIcon} isLoading={busyId === d.idConductor} onClick={() => vetar(d.idConductor, d.nombre)}>Vetar</Button>
+                  )}
+                  {puedeReactivar(d.estadoCuenta) && (
+                    <Button variant="success" size="sm" icon={PowerIcon} isLoading={busyId === d.idConductor} onClick={() => reactivar(d.idConductor, d.nombre)}>Reactivar</Button>
+                  )}
+                </div>
               </div>
             ))}
           </div>

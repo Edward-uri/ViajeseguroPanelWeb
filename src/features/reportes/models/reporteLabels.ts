@@ -31,6 +31,9 @@ export function estadoCuentaBadge(estado: string): { label: string; variant: Bad
 /** ¿La cuenta sigue activa? (única situación en la que tiene sentido vetar). */
 export const puedeVetar = (estado: string): boolean => estado === 'activo'
 
+/** ¿La cuenta está suspendida? (única situación en la que se puede reactivar). */
+export const puedeReactivar = (estado: string): boolean => estado === 'suspendido'
+
 const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
 
 /** ISO → "12 jul 2026" (o con hora: "12 jul 2026 · 14:30"). '—' si viene null. */
