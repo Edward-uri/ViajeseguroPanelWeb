@@ -14,5 +14,6 @@ export interface DriverAdminDto {
   idMunicipio: number | null
   municipio: string | null
   estadoVerificacion: VerificationStatus
+  estadoCuenta: string
   vehiculos: DriverVehicleDto[]
 }
