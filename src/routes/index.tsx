@@ -6,6 +6,7 @@ import { LoginView, CodeVerificationView, CreatePasswordView, AcceptInvitationVi
 import { ReviewQueueView, DriverDetailView } from '../features/review'
 import { VehicleQueueView, VehicleDetailView } from '../features/vehicles'
 import { DriversListView } from '../features/drivers'
+import { ReportsListView, ReportedDriverDetailView } from '../features/reportes'
 import { ZonesView } from '../features/zones'
 import { AdminsView } from '../features/admins'
 import { SettingsView } from '../features/settings'
@@ -22,6 +23,8 @@ const privateRoutes: PrivateRoute[] = [
   { path: paths.vehiculos, element: <VehicleQueueView /> },
   { path: '/vehiculos/:vehicleId', element: <VehicleDetailView /> },
   { path: paths.conductores, element: <DriversListView /> },
+  { path: paths.reportes, element: <ReportsListView /> },
+  { path: '/reportes/:driverId', element: <ReportedDriverDetailView /> },
   { path: paths.zonas, element: <ZonesView /> },
   { path: paths.administradores, element: <AdminsView /> },
   { path: paths.ajustes, element: <SettingsView /> },
